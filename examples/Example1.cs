@@ -8,14 +8,14 @@ internal class Example1
     {
         var initRequest = new InitZainCashApiRequest
         {
-            Msisdn = "9647835077893",
-            Amount = "1000",
+            Amount = "1000",// at lease 1000 IQD 
             Language = "en",
             OrderId = "123456",
-            MerchantId = "5ffacf6612b5777c6d44266f",
-            Secret = "$2y$10$hBbAZo2GfSSvyqAyV2SaqOfYewgYpfR1O19gIh4SqyGWdmySZYPuS",
-            ServiceType = "ozone service",
-            RedirectionUrl = "https://www.google.com"
+            ServiceType = "book_service",
+            Msisdn = "9647835077893", // your wallet phone number
+            MerchantId = "5ffacf6612b5777c6d44266f", // your merchant id from ZainCash support
+            Secret = "$2y$10$hBbAZo2GfSSvyqAyV2SaqOfYewgYpfR1O19gIh4SqyGWdmySZYPuS", // your secret from ZainCash support
+            RedirectionUrl = "https://www.your-website-endpoint.com" // which will handle the response from ZainCash with the token as a query string
         };
 
         // - Create new Transaction [BE]
