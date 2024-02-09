@@ -1,9 +1,9 @@
 ﻿
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using ZainCash.Net.DTOs;
 
 namespace ZainCash.Net;
@@ -11,9 +11,13 @@ namespace ZainCash.Net;
 public class ZainCashInitializer
 {
     private string URL = string.Empty;
+    private static string rUrl = string.Empty;
+    private static string tUrl = string.Empty;
+    public static bool IsDevelopment = false;
 
-    public ZainCashInitializer(InitZainCashApiRequest initRequest)
+    public ZainCashInitializer(InitZainCashApiRequest initRequest, bool isDevelopment = false)
     {
+        IsDevelopment = isDevelopment;
         this.URL = Init(initRequest).Result;
     }
 
@@ -38,8 +42,18 @@ public class ZainCashInitializer
         };
 
         var token = GenerateToken(data, initRequest.Secret);
-        var tUrl = "https://test.zaincash.iq/transaction/init";
-        var rUrl = "https://test.zaincash.iq/transaction/pay?id=";
+
+        if (IsDevelopment)
+        {
+            tUrl = "https://test.zaincash.iq/transaction/init";
+            rUrl = "https://test.zaincash.iq/transaction/pay?id=";
+        }
+        else
+        {
+            tUrl = "https://api.zaincash.iq/transaction/init";
+            rUrl = "https://api.zaincash.iq/transaction/pay?id=";
+        }
+
         using var client = new HttpClient();
         var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -57,11 +71,12 @@ public class ZainCashInitializer
             }
             var APIUrlWithTransactionId = rUrl + zainCashAPIResponse.Id;
             return APIUrlWithTransactionId;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new Exception("Error while calling ZainCash API: " + e.Message);
         }
-    }       
+    }
 
     /// <summary>
     ///  This method is used to generate a token for ZainCash API based on the data and the secret.
@@ -85,7 +100,7 @@ public class ZainCashInitializer
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    
+
     /// <summary>
     ///  This method is used to decode the token and return the name of the user.
     /// </summary>
