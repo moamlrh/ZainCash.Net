@@ -1,7 +1,7 @@
 # ZainCash.Net
 
 ### Install : 
-`dotnet add package ZainCash.Net --version 1.0.1`
+`dotnet add package ZainCash.Net --version 1.0.4`
 
 ### Usage :
 ```csharp
