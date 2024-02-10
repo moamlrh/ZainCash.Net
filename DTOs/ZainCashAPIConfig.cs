@@ -1,5 +1,8 @@
 ﻿namespace ZainCash.Net.DTOs;
 
+/// <summary>
+///  Could be used to configure the ZainCash API settings and credentials.
+/// </summary>
 public class ZainCashAPIConfig
 {
     public string Language { get; set; } = "en";

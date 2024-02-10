@@ -1,10 +1,13 @@
 ﻿namespace ZainCash.Net.DTOs;
 
-public class ZainCashAPIResponse
+/// <summary>
+///  Represents the response from the ZainCash API on initiating a new transaction.
+/// </summary>
+public class InitTransactionResponse
 {
+    public int Amount { get; set; }
     public string Source { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public string Amount { get; set; } = string.Empty;
     public string To { get; set; } = string.Empty;
     public string ServiceType { get; set; } = string.Empty;
     public string Lang { get; set; } = string.Empty;

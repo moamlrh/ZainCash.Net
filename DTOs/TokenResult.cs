@@ -1,14 +1,17 @@
 ﻿namespace ZainCash.Net.DTOs;
 
-public class TokenResponse
+/// <summary>
+///  Represents the result of a token decoding.
+/// </summary>
+public class TokenResult
 {
-    public Status Status { get; set; }
+    public PaymentStatus Status { get; set; }
     public string Msg { get; set; } = string.Empty;
     public string Id { get; set; } = string.Empty;
     public string OrderId { get; set; } = string.Empty;
 }
 
-public enum Status
+public enum PaymentStatus
 {
     failed,
     success,
