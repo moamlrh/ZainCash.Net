@@ -21,20 +21,18 @@ var initRequest = new InitTransactionRequest
 // - Create new Transaction [BE]
 IZainCashService service = new ZainCashService(); // OR by using DI (Dependency Injection).
 
-// - To create a new transaction, you need to call the InitAsync method. [BE]
+// - For initiating a new transaction.
 string URL = await service.InitTransactionAsync(initRequest, true, CancellationToken.None);
 
-// - To generate the token without creating a new transaction, you need to call the GenerateToken method. [BE]
+// - To generate the token without creating (init) a new transaction.
 string token = service.GenerateToken(initRequest);
 
-// - User will pay using the URL returned from the previous step. [FE]
-
-// - After the user pays, the user will be redirected to the RedirectionUrl. [FE]
-
-// - The RedirectionUrl will contain the token in the query string. [FE] [BE]
+// - User will pay using the URL returned from the previous step which contains the transaction id.
+// - After the user completes the payment, ZainCash will redirect the user to the RedirectionUrl.
+// - The RedirectionUrl will contain the token in the query string
 // - Will be something like: https://www.your-website.com/?token=THE_TOKEN
 
-// - To decode the token and get the transaction details and status.
+// - To decode the token and get the transaction details.
 TokenResult tokenResult = service.DecodeToken("THE_TOKEN", initRequest.Secret);
 
 // - You can check the transaction status. e.g.
@@ -68,4 +66,21 @@ TransactionDetailsResponse transactionDetails = await service.GetTransactionDeta
     MerchantId = initRequest.MerchantId,
     Secret = initRequest.Secret
 });
+
+
+// - TransactionDetailsResponse contains more details as well.
+Console.WriteLine(transactionDetails.Id); // Transaction id
+Console.WriteLine(transactionDetails.Type); // Transaction type
+Console.WriteLine(transactionDetails.Amount); // Transaction amount
+Console.WriteLine(transactionDetails.Source); // Transaction source
+Console.WriteLine(transactionDetails.Credit); // Transaction credit
+Console.WriteLine(transactionDetails.Status); // Transaction status
+Console.WriteLine(transactionDetails.OrderId); // Transaction order id
+Console.WriteLine(transactionDetails.Reversed); // Transaction reversed
+Console.WriteLine(transactionDetails.CreatedAt); // Transaction created at
+Console.WriteLine(transactionDetails.UpdatedAt); // Transaction updated at
+Console.WriteLine(transactionDetails.RedirectUrl); // Transaction redirect url
+Console.WriteLine(transactionDetails.ServiceType); // Transaction service type
+Console.WriteLine(transactionDetails.ReferenceNumber); // Transaction reference number
+Console.WriteLine(transactionDetails.CurrencyConversion); // Transaction currency conversion
 ```

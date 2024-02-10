@@ -68,5 +68,21 @@ internal class Example1
             MerchantId = initRequest.MerchantId,
             Secret = initRequest.Secret
         });
+
+        // - TransactionDetailsResponse contains more details as well.
+        Console.WriteLine(transactionDetails.Id); // Transaction id
+        Console.WriteLine(transactionDetails.Type); // Transaction type
+        Console.WriteLine(transactionDetails.Amount); // Transaction amount
+        Console.WriteLine(transactionDetails.Source); // Transaction source
+        Console.WriteLine(transactionDetails.Credit); // Transaction credit
+        Console.WriteLine(transactionDetails.Status); // Transaction status
+        Console.WriteLine(transactionDetails.OrderId); // Transaction order id
+        Console.WriteLine(transactionDetails.Reversed); // Transaction reversed
+        Console.WriteLine(transactionDetails.CreatedAt); // Transaction created at
+        Console.WriteLine(transactionDetails.UpdatedAt); // Transaction updated at
+        Console.WriteLine(transactionDetails.RedirectUrl); // Transaction redirect url
+        Console.WriteLine(transactionDetails.ServiceType); // Transaction service type
+        Console.WriteLine(transactionDetails.ReferenceNumber); // Transaction reference number
+        Console.WriteLine(transactionDetails.CurrencyConversion); // Transaction currency conversion
     }
 }
