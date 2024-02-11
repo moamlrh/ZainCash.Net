@@ -1,23 +1,28 @@
+﻿using System.Net.Http.Json;
 using ZainCash.Net.DTOs;
 using ZainCash.Net.Utils;
-using System.Net.Http.Json;
-using ZainCash.Net.Interfaces;
 
-namespace ZainCash.Net;
+namespace ZainCash.Net.Services;
 
-public class ZainCashService : IZainCashService
+public abstract class BaseZainCashService : IZainCashService
 {
+    private readonly ZainCashAPIConfig _config;
+    public BaseZainCashService(ZainCashAPIConfig config)
+    {
+        _config = config;
+    }
+
     /// <summary>
     /// Initialize a new transaction and return the URL which used by the client to redirect to ZainCash payment page.
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<string> InitTransactionAsync(InitTransactionRequest request, bool isDevelopment = false, CancellationToken cancellationToken = default)
+    public async Task<InitTransactionResponse> InitTransactionAsync(InitTransactionRequest request, CancellationToken cancellationToken = default)
     {
-        var data = request.GetData();
-        var token = TokenHelper.GenerateToken(data, request.Secret);
-        var tUrl = isDevelopment ? "https://test.zaincash.iq/transaction/init" : "https://api.zaincash.iq/transaction/init";
-        var rUrl = isDevelopment ? "https://test.zaincash.iq/transaction/pay?id=" : "https://api.zaincash.iq/transaction/pay?id=";
+        var data = request.GetData(_config);
+        var token = TokenHelper.GenerateToken(data, _config.Secret);
+        var tUrl = GetInitTransactionUrl();
+        var rUrl = GetPayTransactionUrl();
 
         using var client = new HttpClient();
         try
@@ -25,8 +30,8 @@ public class ZainCashService : IZainCashService
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "token", token },
-                { "lang", request.Language },
-                { "merchantId", request.MerchantId },
+                { "lang", _config.Language },
+                { "merchantId", _config.MerchantId },
             });
             var response = await client.PostAsync(tUrl, content, cancellationToken);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -42,7 +47,7 @@ public class ZainCashService : IZainCashService
             {
                 throw new Exception("ZainCash API response is null");
             }
-            return rUrl + zainCashAPIResponse.Id;
+            return zainCashAPIResponse;
         }
         catch (Exception ex)
         {
@@ -61,11 +66,11 @@ public class ZainCashService : IZainCashService
     /// <param name="isDevelopment"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<TransactionDetailsResponse> GetTransactionDetailsAsync(TransactionDetailsRequest request, bool isDevelopment = false, CancellationToken cancellationToken = default)
+    public async Task<TransactionDetailsResponse> GetTransactionDetailsAsync(TransactionDetailsRequest request, CancellationToken cancellationToken = default)
     {
         var data = request.GetData();
         var token = TokenHelper.GenerateToken(data, request.Secret);
-        var rUrl = isDevelopment ? "https://test.zaincash.iq/transaction/get" : "https://api.zaincash.iq/transaction/get";
+        var rUrl = GetTransactionUrl();
 
         using var client = new HttpClient();
         try
@@ -131,7 +136,7 @@ public class ZainCashService : IZainCashService
     /// <returns></returns>
     public string GenerateToken(InitTransactionRequest initZainRequest)
     {
-        return TokenHelper.GenerateToken(initZainRequest);
+        return TokenHelper.GenerateToken(initZainRequest, _config);
     }
 
     /// <summary>
@@ -148,4 +153,7 @@ public class ZainCashService : IZainCashService
         }
         return string.Empty;
     }
+    protected abstract string GetInitTransactionUrl();
+    protected abstract string GetPayTransactionUrl();
+    protected abstract string GetTransactionUrl();
 }
