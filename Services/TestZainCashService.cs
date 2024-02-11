@@ -4,8 +4,7 @@ namespace ZainCash.Net.Services;
 
 public class TestZainCashService : BaseZainCashService
 {
-    public TestZainCashService(ZainCashAPIConfig config) 
-        : base(config)
+    public TestZainCashService(ZainCashAPIConfig config) : base(config)
     {
     }
 

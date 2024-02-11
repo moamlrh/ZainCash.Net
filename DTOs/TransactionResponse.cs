@@ -3,7 +3,7 @@ namespace ZainCash.Net.DTOs;
 /// <summary>
 ///  Represents the response of the transaction details API call.
 /// </summary>
-public class TransactionDetailsResponse
+public class TransactionResponse
 {
     public int Amount { get; set; }
     public string Source { get; set; } = string.Empty;

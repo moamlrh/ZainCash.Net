@@ -9,7 +9,7 @@ public class ZainCashAPIConfig
     public string Secret { get; set; } = string.Empty;
     public string Msisdn { get; set; } = string.Empty;
     public string MerchantId { get; set; } = string.Empty;
-    public string RedirectionUrl { get; set; } = string.Empty;
+    public string RedirectUrl { get; set; } = string.Empty;
     public string ServiceType { get; set; } = "ozone service";
 
     public void Validate()
@@ -30,9 +30,9 @@ public class ZainCashAPIConfig
         {
             throw new Exception("ServiceType is required");
         }
-        if (string.IsNullOrWhiteSpace(RedirectionUrl))
+        if (string.IsNullOrWhiteSpace(RedirectUrl))
         {
-            throw new Exception("RedirectionUrl is required");
+            throw new Exception("RedirectUrl is required");
         }
         if (string.IsNullOrWhiteSpace(Secret))
         {
@@ -49,7 +49,7 @@ public class ZainCashAPIConfig
             { "lang", Language },
             { "merchantId", MerchantId },
             { "serviceType", ServiceType },
-            { "redirectUrl", RedirectionUrl },
+            { "redirectUrl", RedirectUrl },
             { "iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() },
             { "exp", (DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 60 * 60 * 4).ToString() }
         };

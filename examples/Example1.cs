@@ -1,4 +1,8 @@
-﻿using ZainCash.Net.DTOs;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using ZainCash.Net.DTOs;
+using ZainCash.Net.Extensions;
 using ZainCash.Net.Services;
 using ZainCash.Net.Utils;
 
@@ -6,42 +10,63 @@ namespace ZainCash.Net.examples;
 
 internal class Example1
 {
-    public static async Task First_Example()
+    public static async Task First_Example(WebApplicationBuilder builder, IConfiguration configuration)
     {
-        var initRequest = new InitTransactionRequest
-        {
-            OrderId = "123456",
-            Amount = 1500, // at lease 1000 IQD 
-        };
+        // [+] Register zain cash service using DI with environment type.
+        builder.Services.AddZainCashService(isDevelopment: true);
 
-        var config = new ZainCashAPIConfig
+        // [+] Register zain cash api config (could be one of the below approach).
+
+        // 1- Will use the default section name "ZainCashAPIConfig" from the *.json file.
+        builder.Services.AddZainCashConfig(configuration);
+
+        // 2- Or, you could specify the section name.
+        builder.Services.AddZainCashConfig(configuration.GetSection("ZainCashAPIConfig"));
+
+        // 3- Or, you could specify the config directly.
+        builder.Services.AddZainCashConfig(new ZainCashAPIConfig
         {
-            ServiceType = "book_service",
             Language = "en",
-            MerchantId = "5ffacf6612b5777c6d44266f",// your merchant id from ZainCash support
-            RedirectionUrl = "https://www.your-website.com/", // which will handle the response from ZainCash with the token as a query string
-            Secret = "$2y$10$hBbAZo2GfSSvyqAyV2SaqOfYewgYpfR1O19gIh4SqyGWdmySZYPuS", // your secret from ZainCash support
-            Msisdn = "9647835077893", // your wallet phone number
-        };
+            ServiceType = "book_service",
+            Msisdn = "9647835077893",
+            MerchantId = "5ffacf6612b5777c6d44266f",
+            RedirectUrl = "https://www.your-website.com/",
+            Secret = "$2y$10$hBbAZo2GfSSvyqAyV2SaqOfYewgYpfR1O19gIh4SqyGWdmySZYPuS",
+        });
 
-        // - Create new Transaction [BE]
-        IZainCashService service = new TestZainCashService(config); // OR by using DI (Dependency Injection).
+        // - Now you can access zain cash config everywhere using DI.
+        var config = builder.Services.BuildServiceProvider().GetRequiredService<ZainCashAPIConfig>();
+
+        // - You can now access the service using the IZainCashService interface 
+        // - The type of the service will be determined by the environment type on the service registration.
+        IZainCashService service = builder.Services.BuildServiceProvider().GetRequiredService<IZainCashService>();
+
+        // - OR by creating an instance of the service directly.
+        IZainCashService productionService = new ZainCashService(config);
+        IZainCashService developmentService = new TestZainCashService(config);
 
         // - To create a new transaction, you need to call the InitAsync method. [BE]
+        var initRequest = new InitTransactionRequest
+        {
+            Amount = 1500,          // at least 1000 IQD 
+            OrderId = "123456",
+        };
         InitTransactionResponse response = await service.InitTransactionAsync(initRequest, CancellationToken.None);
+        Console.WriteLine(response.Id); // Transaction Id
 
-        // - To generate the token without creating a new transaction, you need to call the GenerateToken method. [BE]
+        // - To generate the token without creating a new transaction.
         string token = service.GenerateToken(initRequest);
 
+        // [+] The next steps will be on the client side (FrontEnd)
         // - User will pay using the URL returned from the previous step. [FE]
-
-        // - After the user pays, the user will be redirected to the RedirectionUrl. [FE]
-
-        // - The RedirectionUrl will contain the token in the query string. [FE] [BE]
+        // - After the user pays, the user will be redirected to the RedirectUrl. [FE]
+        // - The RedirectUrl will contain the token in the query string. [FE] [BE]
         // - Will be something like: https://www.your-website.com/?token=THE_TOKEN
 
-        // - To decode the token and get the transaction details and status.
-        TokenResult tokenResult = service.DecodeToken("THE_TOKEN", config.Secret);
+
+        // [+] Back to the server side (BackEnd)
+        // - To decode the token and get the transaction details like status or id.
+        TokenResult tokenResult = service.DecodeToken("THE_TOKEN");
 
         // - You can check the transaction status. e.g.
         if (tokenResult.Status == PaymentStatus.Success)
@@ -69,12 +94,7 @@ internal class Example1
 
 
         // - To get the transaction details by the transaction id.
-        TransactionDetailsResponse transactionDetails = await service.GetTransactionDetailsAsync(new TransactionDetailsRequest
-        {
-            TransactionId = tokenResult.Id,
-            MerchantId = config.MerchantId,
-            Secret = config.Secret
-        });
+        TransactionResponse transactionDetails = await service.GetTransactionAsync(tokenResult.Id, CancellationToken.None);
 
         // - TransactionDetailsResponse contains more details as well.
         Console.WriteLine(transactionDetails.Id); // Transaction id

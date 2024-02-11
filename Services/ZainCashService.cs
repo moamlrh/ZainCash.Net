@@ -1,13 +1,10 @@
-using System.Net.Http.Json;
-using ZainCash.Net.DTOs;
 using ZainCash.Net.Utils;
 
 namespace ZainCash.Net.Services;
 
 public class ZainCashService : BaseZainCashService
 {
-    public ZainCashService(ZainCashAPIConfig config) 
-        : base(config)
+    public ZainCashService(ZainCashAPIConfig config) : base(config)
     {
     }
 
