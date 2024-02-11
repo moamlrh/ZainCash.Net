@@ -63,10 +63,10 @@ IZainCashService developmentService = new TestZainCashService(config);
 
 #### Init a new transaction (create transaction):
 ```csharp
-// - To create a new transaction, you need to call the InitAsync method. [BE]
+// - To create a new transaction.
 var initRequest = new InitTransactionRequest
 {
-    Amount = 1500,          // at least 1000 IQD
+    Amount = 1500,      // at least 1000 IQD
     OrderId = "123456",
 };
 InitTransactionResponse response = await service.InitTransactionAsync(initRequest, CancellationToken.None);
