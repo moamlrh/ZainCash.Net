@@ -11,8 +11,8 @@ ZainCash.Net is a simple and easy-to-use library for integrating ZainCash paymen
 `Install-Package ZainCash.Net -Version 3.0.0`
 
 ### Environment:
-- [x] Production.
-- [x] Development.
+- [x] Production (ZainCash API)
+- [x] Development (ZainCash Test API)
 
 ### Tested on:
 - [x] .NET 8
