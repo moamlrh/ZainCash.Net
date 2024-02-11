@@ -13,8 +13,8 @@ public class TokenResult
 
 public enum PaymentStatus
 {
-    failed,
-    success,
-    pending,
-    completed,
+    Failed,
+    Success,
+    Pending,
+    Completed,
 }

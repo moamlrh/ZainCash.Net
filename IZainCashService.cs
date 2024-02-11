@@ -1,12 +1,13 @@
 using ZainCash.Net.DTOs;
 
-namespace ZainCash.Net.Interfaces;
+namespace ZainCash.Net;
 
 public interface IZainCashService
 {
-    Task<string> InitTransactionAsync(InitTransactionRequest initRequest, bool isDevelopment = false, CancellationToken cancellationToken = default);
-    Task<TransactionDetailsResponse> GetTransactionDetailsAsync(TransactionDetailsRequest request, bool isDevelopment = false, CancellationToken cancellationToken = default);
-    TokenResult DecodeToken(string token, string secret);
+    string GetPaymentUrl(string transactionId);
     string GenerateToken(InitTransactionRequest initRequest);
-    string ExtractTransactionId(string URL);
+
+    TokenResult DecodeToken(string token);
+    Task<TransactionResponse> GetTransactionAsync(string transactionId, CancellationToken cancellationToken = default);
+    Task<InitTransactionResponse> InitTransactionAsync(InitTransactionRequest initRequest, CancellationToken cancellationToken = default);
 }
