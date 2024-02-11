@@ -36,10 +36,10 @@ internal class TokenHelper
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public static string GenerateToken(InitTransactionRequest request)
+    public static string GenerateToken(InitTransactionRequest request, ZainCashAPIConfig config)
     {
-        var data = request.GetData();
-        return GenerateToken(data, request.Secret);
+        var data = request.GetData(config);
+        return GenerateToken(data, config.Secret);
     }
 
     /// <summary>
