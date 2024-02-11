@@ -1,8 +1,21 @@
 # ZainCash.Net
 
-### Install :
+### Install:
+##### using CLI:
+`dotnet add package ZainCash.Net --version 3.0.0`
 
-`dotnet add package ZainCash.Net --version 2.0.0`
+##### using Package Manager:
+`Install-Package ZainCash.Net -Version 3.0.0`
+
+### Description:
+ZainCash.Net is a simple and easy-to-use library for integrating ZainCash payment gateway with your .NET applications. It provides a simple and easy-to-use API for creating a new transaction, generating a token, decoding the token, and getting the transaction details.
+
+### Environment:
+- [x] Production.
+- [x] Development.
+
+### Tested on:
+- [x] .NET 8
 
 ### Usage :
 
