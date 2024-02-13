@@ -11,6 +11,7 @@
     <Description>ZainCash Api integration using .NET (ASP.NET or whatever .NET project)</Description>
     <PackageIcon>images/zain.png</PackageIcon>
     <RepositoryUrl>https://github.com/moamlrh/ZainCash.Net</RepositoryUrl>
+    <PackageTags>zain, zaincash, online payment</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
