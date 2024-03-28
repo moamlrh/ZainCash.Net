@@ -44,7 +44,7 @@ public abstract class BaseZainCashService : IZainCashService
             {
                 throw new Exception("ZainCash API response is null");
             }
-            var zainCashAPIResponse = await response.Content.ReadFromJsonAsync<InitTransactionResponse>(cancellationToken);
+            var zainCashAPIResponse = await response.Content.ReadFromJsonAsync<InitTransactionResponse>();
             if (zainCashAPIResponse == null)
             {
                 throw new Exception("ZainCash API response is null");
@@ -98,7 +98,7 @@ public abstract class BaseZainCashService : IZainCashService
                 throw new Exception("ZainCash API response is null");
             }
 
-            var transactionDetails = await response.Content.ReadFromJsonAsync<TransactionResponse>(cancellationToken);
+            var transactionDetails = await response.Content.ReadFromJsonAsync<TransactionResponse>();
             if (transactionDetails == null)
             {
                 throw new Exception("ZainCash API response is null");

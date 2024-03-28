@@ -1,4 +1,5 @@
-﻿using ZainCash.Net.Utils;
+﻿using System.Linq;
+using ZainCash.Net.Utils;
 
 namespace ZainCash.Net.DTOs;
 
@@ -30,6 +31,6 @@ public class InitTransactionRequest
             { "orderId", OrderId },
             { "amount", Amount.ToString() },
         };
-        return local.Union(config.GetData()).ToDictionary();
+        return local.Union(config.GetData()).ToDictionary(x => x.Key, x => x.Value);
     }
 }
